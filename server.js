@@ -1,4 +1,5 @@
 var mqtt = require('mqtt');
+require('dotenv').config()
 
 var srcHost = process.env.SOURCE;
 var destHost = process.env.DESTINATION;
@@ -47,7 +48,49 @@ srcClient.on('message', function (topic, message) {
     console.log("Received message from source, but destination isn't connected. Dropping message");
     return;
   }
-  console.log("forwarding message on topic " + topic);
+  // console.log("forwarding message on topic " + topic); // reduce this log entry so that it doesn't blow up the log on disk
   destClient.publish(topic, message);
 });
 
+// generic notifications
+// source
+srcClient.on('reconnect', () => {
+	console.warn('S MQTT reconnect');
+});
+
+srcClient.on('disconnect', () => {
+	console.warn('S MQTT disconnect');
+});
+
+srcClient.on('offline', () => {
+	console.warn('S MQTT offline');
+});
+
+srcClient.on('close', () => {
+	console.warn('S MQTT close');
+});
+
+srcClient.on('end', () => {
+	console.warn('S MQTT end');
+});
+
+// dest
+destClient.on('reconnect', () => {
+	console.warn('D MQTT reconnect');
+});
+
+destClient.on('disconnect', () => {
+	console.warn('D MQTT disconnect');
+});
+
+destClient.on('offline', () => {
+	console.warn('D MQTT offline');
+});
+
+destClient.on('close', () => {
+	console.warn('D MQTT close');
+});
+
+destClient.on('end', () => {
+	console.warn('D MQTT end');
+});
