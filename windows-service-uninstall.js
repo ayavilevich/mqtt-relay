@@ -6,7 +6,7 @@ const path = require('path');
 const svc = new Service({
 	name: 'mqtt-relay',
 	description: 'Agent to provide mqtt relay functionality',
-	script: path.join(__dirname, 'index.js'),
+	script: path.join(__dirname, 'server.js'),
 });
 
 // Listen for the "uninstall" event so we know when it's done.
