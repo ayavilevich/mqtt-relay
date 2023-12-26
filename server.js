@@ -1,4 +1,4 @@
-var mqtt = require('mqtt');
+var mqtt = require('mqtt'); // https://www.npmjs.com/package/mqtt
 require('dotenv').config()
 
 var srcHost = process.env.SOURCE;
@@ -43,13 +43,13 @@ destClient.on('error', function (error) {
   console.error("Failed to connect to destination " + destHost, error);
 });
 
-srcClient.on('message', function (topic, message) {
+srcClient.on('message', function (topic, message, packet) {
   if (!destClient.connected) {
     console.log("Received message from source, but destination isn't connected. Dropping message");
     return;
   }
   // console.log("forwarding message on topic " + topic); // reduce this log entry so that it doesn't blow up the log on disk
-  destClient.publish(topic, message);
+  destClient.publish(topic, message, {qos: packet.qos, retain: packet.retain, dup: packet.dup});
 });
 
 // generic notifications
